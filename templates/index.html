@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #postResult {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Blog API</h1>
+
+    <h2>Create Post</h2>
+    <form id="createPostForm">
+        <label>Title:</label>
+        <input type="text" id="title" name="title"><br>
+        <label>Content:</label><br>
+        <textarea id="content" name="content"></textarea><br>
+        <button type="submit">Create Post</button>
+    </form>
+
+    <h2>Get Post</h2>
+    <form id="getPostForm">
+        <label>Post ID:</label>
+        <input type="text" id="postId" name="postId"><br>
+        <button type="submit">Get Post</button>
+    </form>
+
+    <h2>Update Post</h2>
+    <form id="updatePostForm">
+        <label>Post ID:</label>
+        <input type="text" id="updatePostId" name="updatePostId"><br>
+        <label>Title:</label>
+        <input type="text" id="updateTitle" name="updateTitle"><br>
+        <label>Content:</label><br>
+        <textarea id="updateContent" name="updateContent"></textarea><br>
+        <button type="submit">Update Post</button>
+    </form>
+
+    <h2>Delete Post</h2>
+    <form id="deletePostForm">
+        <label>Post ID:</label>
+        <input type="text" id="deletePostId" name="deletePostId"><br>
+        <button type="submit">Delete Post</button>
+    </form>
+
+    <div id="postResult"></div>
+
+    <script>
+        document.getElementById('createPostForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/posts/', {
+                method: 'POST',
+                body: JSON.stringify(Object.fromEntries(formData.entries())),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            console.log(data);
+            if (response.ok) {
+                alert("Post created successfully!");
+            } else {
+                alert("Failed to create post: " + data.detail);
+            }
+        });
+
+        document.getElementById('getPostForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const postId = document.getElementById('postId').value;
+            const response = await fetch(`/posts/${postId}`);
+            const data = await response.json();
+            document.getElementById('postResult').innerText = JSON.stringify(data, null, 2);
+        });
+
+        document.getElementById('updatePostForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const updatePostId = document.getElementById('updatePostId').value;
+            const updateTitle = document.getElementById('updateTitle').value;
+            const updateContent = document.getElementById('updateContent').value;
+            const response = await fetch(`/posts/${updatePostId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ title: updateTitle, content: updateContent }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            console.log(data);
+            if (response.ok) {
+                alert("Post updated successfully!");
+            } else {
+                alert("Failed to update post: " + data.detail);
+            }
+        });
+
+        document.getElementById('deletePostForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const deletePostId = document.getElementById('deletePostId').value;
+            const response = await fetch(`/posts/${deletePostId}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+            console.log(data);
+            if (response.ok) {
+                alert("Post deleted successfully!");
+            } else {
+                alert("Failed to delete post: " + data.detail);
+            }
+        });
+    </script>
+</body>
+
+</html>
