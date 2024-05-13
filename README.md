@@ -16,10 +16,10 @@ This project implements a simple Blog API using FastAPI and MongoDB. It allows u
 - **Pydantic**: Pydantic is used for data validation and serialization/deserialization of Python data structures.
 
 ## Directory Structure
--templates # Directory containing HTML templates for frontend
--index.html # HTML file with forms to interact with the API
--main.py # FastAPI application containing the API endpoints
--requirements.txt # List of Python dependencies
+- templates # Directory containing HTML templates for frontend
+- index.html # HTML file with forms to interact with the API
+- main.py # FastAPI application containing the API endpoints
+- requirements.txt # List of Python dependencies
 
 ## Setup Instructions
 
